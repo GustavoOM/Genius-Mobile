@@ -11,7 +11,10 @@
     "@react-native-community/masked-view": "0.1.5",
     "@react-navigation/native": "^5.1.4",
     "@react-navigation/stack": "^5.2.9",
+    "@use-expo/font": "^2.0.0",
     "expo": "~36.0.0",
+    "expo-av": "^8.1.0",
+    "polished": "^3.5.2",
     "react": "~16.9.0",
     "react-dom": "~16.9.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-36.0.0.tar.gz",
@@ -19,7 +22,8 @@
     "react-native-safe-area-context": "0.6.0",
     "react-native-screens": "2.0.0-alpha.12",
     "react-native-web": "~0.11.7",
-    "react-navigation": "^4.3.6"
+    "react-navigation": "^4.3.6",
+    "styled-components": "^5.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",
