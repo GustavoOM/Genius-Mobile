@@ -28,11 +28,11 @@ export default function Home() {
 
   const [playButtonClick, setPlayButtonClick] = useState(false);
 
-  // const soundObject = new Audio.Sound();
+  const soundObject = new Audio.Sound();
 
-  const [sequence, setSequence] = useState([]);
+  const [sequence, setSequence] = useState('');
   const [points, setPoints] = useState(0);
-  const [userSequence, setUserSequence] = useState([]);
+  const [userSequence, setUserSequence] = useState('');
   const [block, setBlock] = useState(false);
   const [score, setScore] = useState(0);
 
@@ -42,8 +42,8 @@ export default function Home() {
   }
 
   function setup() {
-    setSequence([]);
-    setUserSequence([]);
+    setSequence('');
+    setUserSequence('');
     setPoints(0);
 
     setPlayButtonClick(!playButtonClick);
@@ -58,42 +58,83 @@ export default function Home() {
     if (points > score) score = points;
   }
 
-  // try {
-  //   await soundObject.loadAsync(require('./assets/sounds/hello.mp3'));
-  //   await soundObject.playAsync();
-  //   // Your sound is playing!
-  // } catch (error) {
-  //   // An error occurred!
-  // }
 
   function add2Sequence() {
     var random = Math.round(Math.random() * (4 - 1) + 1);
-    setSequence([...sequence, random]);
-    console.log(sequence);
+    setSequence(sequence + random);
     showSequence();
   }
 
-  function showSequence(sequence) {
-    for (var i in sequence) {
-      switch (i) {
-        case 1: //Green
+  function showSequence() {
+    setBlock(true)
+    console.log(sequence);
+    
+    for (var i = 0; i < sequence.length; i++) {
+      switch (sequence[i]) {
+        case "1": //Green
+          console.log('GREEN');
+
+          try {
+            await soundObject.loadAsync(require('../../assets/sounds/GREEN.mp3'));
+            await soundObject.playAsync();
+            // Your sound is playing!
+          } catch (error) {
+            // An error occurred!
+          }
           break;
-        case 2: //Red
+        case "2": //Red
+          console.log('RED');
+                  
+          try {
+            await soundObject.loadAsync(require('../../assets/sounds/RED.mp3'));
+            await soundObject.playAsync();
+            // Your sound is playing!
+          } catch (error) {
+            // An error occurred!
+          }
           break;
-        case 3: //Yellow
+        case "3": //Yellow
+          console.log('YELLOW');
+
+          try {
+            await soundObject.loadAsync(require('../../assets/sounds/YELLOW.mp3'));
+            await soundObject.playAsync();
+            // Your sound is playing!
+          } catch (error) {
+            // An error occurred!
+          }
           break;
-        case 4: //Blue
+        case "4": //Blue
+          console.log('BLUE');
+
+          try {
+            await soundObject.loadAsync(require('../../assets/sounds/BLUE.mp3'));
+            await soundObject.playAsync();
+            // Your sound is playing!
+          } catch (error) {
+            // An error occurred!
+          }
           break;
         default:
+          console.log('SKIP')
           break;
       }
     }
-    setBlock(false);
+    setBlock(false) 
+    console.log('\n')
+    return
   }
 
   function addUserSequence(color) {
-    setUserSequence([...userSequence, color]);
-    verifyUserSequence();
+    console.log(sequence);
+    console.log(userSequence);
+    console.log("\n");
+
+    if(!block){
+      setUserSequence(userSequence + color);
+      verifyUserSequence();
+    }
+    
   }
 
   function verifyUserSequence() {
@@ -104,10 +145,13 @@ export default function Home() {
       }
     }
 
-    setPoints(points + 1);
-    setUserSequence([]);
+    
+    
+
+    
     if (sequence.length === userSequence.lenght) {
-      setBlock(true);
+      setPoints(points + 1);
+      setUserSequence('');
       add2Sequence();
     }
   }
@@ -120,26 +164,27 @@ export default function Home() {
           <RowButton>
             <ButtonGreen
               popButton={popGreenButton}
-              onPress={() => (block === false ? addUserSequence(1) : null)}
+              onPress={() => addUserSequence(1)}
             />
             <ButtonRed
               popButton={popRedButton}
-              onPress={() => (block === false ? addUserSequence(2) : null)}
+              onPress={() => addUserSequence(2)}
             />
           </RowButton>
           <RowButton>
             <ButtonYellow
               popButton={popYellowButton}
-              onPress={() => (block === false ? addUserSequence(3) : null)}
+              onPress={() => addUserSequence(3)}
             />
             <ButtonBlue
               popButton={popBlueButton}
-              onPress={() => (block === false ? addUserSequence(4) : null)}
+              onPress={() => addUserSequence(4)}
             />
           </RowButton>
         </ColumnButton>
         <PlayButton
-          onPress={() => (playButtonClick === false ? startGame() : endGame())}
+          //onPress={() => (playButtonClick === false ? startGame() : endGame())}
+          onPress={() => startGame()}
         >
           {playButtonClick === false ? (
             <AntDesign name="play" size={100} color="#999" />
