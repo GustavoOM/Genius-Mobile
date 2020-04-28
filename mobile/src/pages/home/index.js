@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Alert } from "react-native";
 import { AntDesign, Ionicons } from "@expo/vector-icons";
 
 import { Audio } from "expo-av";
@@ -20,6 +21,9 @@ import {
   TextTitle,
 } from "./styles";
 
+var sequence = "";
+var userSequence = "";
+
 export default function Home() {
   const [popRedButton, setPopRedButton] = useState(false);
   const [popGreenButton, setPopGreenButton] = useState(false);
@@ -28,113 +32,153 @@ export default function Home() {
 
   const [playButtonClick, setPlayButtonClick] = useState(false);
 
-  const soundObject = new Audio.Sound();
-
-  const [sequence, setSequence] = useState('');
   const [points, setPoints] = useState(0);
-  const [userSequence, setUserSequence] = useState('');
   const [block, setBlock] = useState(false);
   const [score, setScore] = useState(0);
 
   function startGame() {
+    setPlayButtonClick(true);
     setup();
     add2Sequence();
   }
 
   function setup() {
-    setSequence('');
-    setUserSequence('');
+    sequence = "";
+    userSequence = "";
     setPoints(0);
-
-    setPlayButtonClick(!playButtonClick);
   }
 
   function endGame() {
+    setPlayButtonClick(false);
+    Alert.alert("Fim de jogo", `Sua pontuação foi ${points}`);
     updateScore();
     setup();
   }
 
   function updateScore() {
-    if (points > score) score = points;
+    if (points > score) setScore(points);
   }
 
-
   function add2Sequence() {
-    var random = Math.round(Math.random() * (4 - 1) + 1);
-    setSequence(sequence + random);
+    sequence += Math.round(Math.random() * (4 - 1) + 1).toString();
     showSequence();
   }
 
-  function showSequence() {
-    setBlock(true)
-    console.log(sequence);
-    
-    for (var i = 0; i < sequence.length; i++) {
-      switch (sequence[i]) {
-        case "1": //Green
-          console.log('GREEN');
-
-          try {
-            await soundObject.loadAsync(require('../../assets/sounds/GREEN.mp3'));
-            await soundObject.playAsync();
-            // Your sound is playing!
-          } catch (error) {
-            // An error occurred!
-          }
-          break;
-        case "2": //Red
-          console.log('RED');
-                  
-          try {
-            await soundObject.loadAsync(require('../../assets/sounds/RED.mp3'));
-            await soundObject.playAsync();
-            // Your sound is playing!
-          } catch (error) {
-            // An error occurred!
-          }
-          break;
-        case "3": //Yellow
-          console.log('YELLOW');
-
-          try {
-            await soundObject.loadAsync(require('../../assets/sounds/YELLOW.mp3'));
-            await soundObject.playAsync();
-            // Your sound is playing!
-          } catch (error) {
-            // An error occurred!
-          }
-          break;
-        case "4": //Blue
-          console.log('BLUE');
-
-          try {
-            await soundObject.loadAsync(require('../../assets/sounds/BLUE.mp3'));
-            await soundObject.playAsync();
-            // Your sound is playing!
-          } catch (error) {
-            // An error occurred!
-          }
-          break;
-        default:
-          console.log('SKIP')
-          break;
-      }
+  async function showSequence() {
+    setBlock(true);
+    for (var index = 0; index < sequence.length; index++) {
+      await sleep(500);
+      showColor(sequence[index]);
     }
-    setBlock(false) 
-    console.log('\n')
-    return
+    setBlock(false);
+  }
+
+  async function showColor(color) {
+    const soundObject = new Audio.Sound();
+
+    switch (color) {
+      case "1": //Green
+        console.log("GREEN");
+        setPopGreenButton(true);
+        try {
+          await soundObject.loadAsync(
+            require("../../../assets/sounds/GREEN.mp3")
+          );
+          await soundObject
+            .playAsync()
+            .then(async (playbackStatus) => {
+              setTimeout(() => {
+                soundObject.unloadAsync();
+              }, playbackStatus.playableDurationMillis);
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        } catch (error) {
+          console.log(error);
+        }
+        setPopGreenButton(false);
+        break;
+      case "2": //Red
+        console.log("RED");
+        setPopRedButton(true);
+        try {
+          await soundObject.loadAsync(
+            require("../../../assets/sounds/RED.mp3")
+          );
+          await soundObject
+            .playAsync()
+            .then(async (playbackStatus) => {
+              setTimeout(() => {
+                soundObject.unloadAsync();
+              }, playbackStatus.playableDurationMillis);
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        } catch (error) {
+          console.log(error);
+        }
+        setPopRedButton(false);
+        break;
+      case "3": //Yellow
+        console.log("YELLOW");
+        setPopYellowButton(true);
+        try {
+          await soundObject.loadAsync(
+            require("../../../assets/sounds/YELLOW.mp3")
+          );
+          await soundObject
+            .playAsync()
+            .then(async (playbackStatus) => {
+              setTimeout(() => {
+                soundObject.unloadAsync();
+              }, playbackStatus.playableDurationMillis);
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        } catch (error) {
+          console.log(error);
+        }
+        setPopYellowButton(false);
+        break;
+      case "4": //Blue
+        console.log("BLUE");
+        setPopBlueButton(true);
+        try {
+          await soundObject.loadAsync(
+            require("../../../assets/sounds/BLUE.mp3")
+          );
+          await soundObject
+            .playAsync()
+            .then(async (playbackStatus) => {
+              setTimeout(() => {
+                soundObject.unloadAsync();
+              }, playbackStatus.playableDurationMillis);
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        } catch (error) {
+          console.log(error);
+        }
+        setPopBlueButton(false);
+        break;
+      default:
+        console.log("SKIP");
+        break;
+    }
+  }
+
+  function sleep(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
   function addUserSequence(color) {
-    console.log(sequence);
-    console.log(userSequence);
-    console.log("\n");
-
-    if(!block){
-      setUserSequence(userSequence + color);
-      verifyUserSequence();
-    }
-    
+    showColor(color);
+    userSequence += color;
+    verifyUserSequence();
   }
 
   function verifyUserSequence() {
@@ -145,14 +189,11 @@ export default function Home() {
       }
     }
 
-    
-    
-
-    
-    if (sequence.length === userSequence.lenght) {
+    if (sequence === userSequence) {
       setPoints(points + 1);
-      setUserSequence('');
+      userSequence = "";
       add2Sequence();
+    } else {
     }
   }
 
@@ -164,27 +205,26 @@ export default function Home() {
           <RowButton>
             <ButtonGreen
               popButton={popGreenButton}
-              onPress={() => addUserSequence(1)}
+              onPress={() => (block ? null : addUserSequence("1"))}
             />
             <ButtonRed
               popButton={popRedButton}
-              onPress={() => addUserSequence(2)}
+              onPress={() => (block ? null : addUserSequence("2"))}
             />
           </RowButton>
           <RowButton>
             <ButtonYellow
               popButton={popYellowButton}
-              onPress={() => addUserSequence(3)}
+              onPress={() => (block ? null : addUserSequence("3"))}
             />
             <ButtonBlue
               popButton={popBlueButton}
-              onPress={() => addUserSequence(4)}
+              onPress={() => (block ? null : addUserSequence("4"))}
             />
           </RowButton>
         </ColumnButton>
         <PlayButton
-          //onPress={() => (playButtonClick === false ? startGame() : endGame())}
-          onPress={() => startGame()}
+          onPress={() => (playButtonClick === false ? startGame() : endGame())}
         >
           {playButtonClick === false ? (
             <AntDesign name="play" size={100} color="#999" />

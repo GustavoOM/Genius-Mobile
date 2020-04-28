@@ -19,6 +19,11 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true
+    },
+    "android": {
+      "package": "com.camara.espertus",
+      "versionCode": 1,
+      "icon": "./assets/icon.png"
     }
   }
 }
